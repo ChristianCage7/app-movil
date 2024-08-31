@@ -5,6 +5,9 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <ion-input {[ngModel]}="username"></ion-input>
+  <ion-input {[ngModel]}="password"></ion-input>
+  <ion-button (click)="login(username,password)"></ion-button>
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">userLogin</ion-title>

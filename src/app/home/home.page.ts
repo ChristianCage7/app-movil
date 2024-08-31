@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { Users } from '../models/user';
 
 @Component({
   selector: 'app-home',
@@ -7,6 +9,14 @@ import { Component } from '@angular/core';
 })
 export class HomePage {
 
-  constructor() {}
+  user!:Users;
+
+  constructor(private router: Router) {}
+
+  ngOnInit(){
+    const navigation = this.router.getCurrentNavigation();
+    console.info(navigation?.extras?.state?.['user'])
+    console.info(this.user)
+  }
 
 }
