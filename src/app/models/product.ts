@@ -2,9 +2,9 @@ export interface Product {
 
     id: number;
     sku: number;
-    nombre: string;
-    compania: string;
+    name: string;
+    company: string;
     stock: number;
-    precio: number;
+    price: number;
 
 }
