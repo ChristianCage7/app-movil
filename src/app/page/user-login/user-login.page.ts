@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Users } from 'src/app/models/user';
+import { RoleType } from 'src/app/models/role';
 import { UsersService } from 'src/app/service/users/users.service';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-user-login',
@@ -12,25 +13,45 @@ export class UserLoginPage implements OnInit {
 
   username: string = ""
   password: string = ""
+  message: string = ""
 
-  constructor(private p_userService: UsersService, private router: Router) { }
+  constructor(
+    private userService: UsersService,
+    private router: Router,
+    private alertController: AlertController) { }
 
   ngOnInit() {
   }
 
-  login(username: string, password: string){
-    const response = this.p_userService.autentification(username,password);
-    if (response != null){
-      console.info("Usuario existe")
-      this.router.navigate(['home'],{
-        state:{
-          user:response
+  async login() {
+    const response = this.userService.autentification(this.username, this.password);
+    if (response != null) {
+      const roleName = response.role.id === RoleType.Admin ? 'Admin' : 'Cliente';
+      this.message = `Usuario: ${response.username}`;
+      this.router.navigate(['home'], {
+        state: {
+          user: response
         }
-      })
-
-    }else{
-      console.info("No existe")
+      });
+    } else {
+      await this.showAlert('Failed', 'usuario o contraseña incorrecta');
+      console.info("No existe");
+      this.username ="";
+      this.password ="";
     }
   }
 
+  async showAlert(header: string, message: string) {
+    const alert = await this.alertController.create({
+      header: header,
+      message: message,
+      buttons: ['OK']
+    });
+
+    await alert.present();
+  }
+
+  cancel() {
+    this.router.navigate(['home']);  // Redirige a la página de inicio o donde desees
+  }
 }

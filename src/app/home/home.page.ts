@@ -1,22 +1,28 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { UsersService } from '../service/users/users.service';
 import { Users } from '../models/user';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage {
+export class HomePage implements OnInit {
 
-  user!:Users;
+  user$: Observable<Users | null> = this.userService.currentUser$;
 
-  constructor(private router: Router) {}
+  constructor(private userService: UsersService, private router: Router) {}
 
-  ngOnInit(){
-    const navigation = this.router.getCurrentNavigation();
-    console.info(navigation?.extras?.state?.['user'])
-    console.info(this.user)
+  ngOnInit() {}
+
+  goToLogin() {
+    this.router.navigate(['user-login']);
   }
 
+  logout() {
+    this.userService.logout();
+    this.router.navigate(['home']); // Navega a la página de home después de desloguearse
+  }
 }
