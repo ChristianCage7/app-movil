@@ -1,6 +1,6 @@
-<<<<<<< HEAD
 import { Injectable } from '@angular/core';
 import { Product } from 'src/app/models/product';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -8,34 +8,43 @@ import { Product } from 'src/app/models/product';
 export class ProductsService {
   private products: Product[] =[];
 
-  constructor() { }
+  constructor() { 
 
-  getProducts(): Product[]{
-    return this.products;
+    this.products = [
+      {
+        id: 1,
+        sku: 1000,
+        name: 'Zapatos',
+        company: 'CAT',
+        stock: 21,
+        price: 69990
+      },
+      {
+        id: 2,
+        sku: 1001,
+        name: 'Pelota',
+        company: 'Peloton',
+        stock: 20,
+        price: 9990
+      }
+    ];
+
+    //Para que este producto aparezca por default en el homepage
+    this.productsSubject = new BehaviorSubject<Product[]>(this.products);
+    this.products$ = this.productsSubject.asObservable();
   }
 
-  addProduct(product: Product): void{
-    this.products.push(this.product);
-  }
+// BehaviorSubject para emitir cambios en la lista de productos
+private productsSubject = new BehaviorSubject<Product[]>(this.products);
+products$ = this.productsSubject.asObservable();
+
+getProducts(): Product[] {
+  return this.products;
 }
-=======
-import { Injectable } from '@angular/core';
-import { Product } from 'src/app/models/product';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class ProductsService {
-  private products: Product[] =[];
-
-  constructor() { }
-
-  getProducts(): Product[]{
-    return this.products;
-  }
-
-  addProduct(product: Product): void{
-    this.products.push(this.product);
-  }
+addProduct(product: Product): void {
+  this.products.push(product);
+  // Emitir la lista actualizada de productos
+  this.productsSubject.next(this.products);
 }
->>>>>>> ee41db5de83b4e9e46a4b709872432e35c05bebf
+}

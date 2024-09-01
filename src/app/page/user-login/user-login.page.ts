@@ -23,24 +23,27 @@ export class UserLoginPage implements OnInit {
   ngOnInit() {
   }
 
+  /* Login usuario */
   async login() {
     const response = this.userService.autentification(this.username, this.password);
     if (response != null) {
       const roleName = response.role.id === RoleType.Admin ? 'Admin' : 'Cliente';
       this.message = `Usuario: ${response.username}`;
+      console.log('Username:', this.username)
       this.router.navigate(['home'], {
         state: {
           user: response
         }
       });
     } else {
-      await this.showAlert('Failed', 'usuario o contraseña incorrecta');
+      await this.showAlert('Error', 'Usuario o contraseña incorrecta');
       console.info("No existe");
       this.username ="";
       this.password ="";
     }
   }
 
+  /* Alerta de error */
   async showAlert(header: string, message: string) {
     const alert = await this.alertController.create({
       header: header,
@@ -51,6 +54,7 @@ export class UserLoginPage implements OnInit {
     await alert.present();
   }
 
+  /*Botón cancelar*/
   cancel() {
     this.router.navigate(['home']);  // Redirige a la página de inicio o donde desees
   }
